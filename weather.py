@@ -1,9 +1,21 @@
-import requests
+import os, requests, tweepy
 from bs4 import BeautifulSoup
 from datetime import datetime
 
-def get_forecast():
-    r = requests.get("https://www.yr.no/place/United_Kingdom/Scotland/Edinburgh/forecast.xml")
+import logging
+logger = logging.getLogger()
+ch = logging.StreamHandler()
+ch.setLevel(logging.INFO)
+frmt = logging.Formatter(logging.BASIC_FORMAT)
+ch.setFormatter(frmt)
+logger.addHandler(ch)
+logger.setLevel(logging.INFO)
+
+def get_forecast(city_url="https://www.yr.no/place/United_Kingdom/Scotland/Edinburgh/forecast.xml"):
+    """Gets forecast data dict for city_url (from https://www.yr.no/.*/forecast.xml)"""
+    logger.info("Getting yr.no data")
+    r = requests.get(city_url)
+    r.raise_for_status()
     soup = BeautifulSoup(r.text, "lxml")
     forecast = soup.findAll('time')
     data = {}
@@ -19,9 +31,11 @@ def get_forecast():
             'wind': x.find('windspeed')['name'],
             'pressure': x.find('pressure')['value']
         }
+    logger.info("Got data")
     return data
 
 def get_tweet(forecast):
+    logger.info("Formatting tweet")
     results = []
     for date in forecast:
         tweet = ""
@@ -36,3 +50,17 @@ def get_tweet(forecast):
             tweet += extra_info
         results.append(tweet)
     return "\n".join(results)
+
+def tweet_weather():
+    try:
+        tweet = get_tweet(get_forecast)
+        logger.info("Connecting to twitter api")
+        auth = tweepy.OAuthHandler(os.environ['API_KEY'], os.environ['API_SECRET'])
+        auth.set_access_token(os.environ['TOKEN'], os.environ['TOKEN_SECRET'])
+        api = tweepy.API(auth)
+
+        logger.info("Posting tweet")
+        api.update_status(tweet)
+        logger.info("Tweet successfully posted")
+    except Exception as e:
+        logger.exception(e)
