@@ -53,7 +53,7 @@ def get_tweet(forecast):
 
 def tweet_weather():
     try:
-        tweet = get_tweet(get_forecast)
+        tweet = get_tweet(get_forecast())
         logger.info("Connecting to twitter api")
         auth = tweepy.OAuthHandler(os.environ['API_KEY'], os.environ['API_SECRET'])
         auth.set_access_token(os.environ['TOKEN'], os.environ['TOKEN_SECRET'])
