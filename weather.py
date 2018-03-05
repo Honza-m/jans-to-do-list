@@ -1,12 +1,12 @@
-import os, requests, tweepy
+import os, sys, requests, tweepy
 from bs4 import BeautifulSoup
 from datetime import datetime
 
 import logging
 logger = logging.getLogger()
-ch = logging.StreamHandler()
+ch = logging.StreamHandler(sys.stdout)
 ch.setLevel(logging.INFO)
-frmt = logging.Formatter(logging.BASIC_FORMAT)
+frmt = logging.Formatter('%(asctime)s - %(name)s:%(levelname)s - %(message)s')
 ch.setFormatter(frmt)
 logger.addHandler(ch)
 logger.setLevel(logging.INFO)
