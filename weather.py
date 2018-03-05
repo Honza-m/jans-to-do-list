@@ -64,3 +64,6 @@ def tweet_weather():
         logger.info("Tweet successfully posted")
     except Exception as e:
         logger.exception(e)
+
+if __name__ == '__main__':
+    tweet_weather()
