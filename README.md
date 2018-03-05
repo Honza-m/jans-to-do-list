@@ -1,4 +1,3 @@
-# jans-to-do-list
-A test heroku deployment app
+# Edinburgh Weather Twitter Bot
 
-Making changes to the readme just to see how push & commit work
+A bot to post weather info to my twitter timeline every morning
