@@ -40,7 +40,7 @@ def get_tweet(forecast):
     for date in forecast:
         tweet = ""
         data = forecast[date]
-        tweet += "{} - {}°C, {}".format(date, data['temp'], data['symbol'])
+        tweet += "{} > {}°C, {}".format(date, data['temp'], data['symbol'])
         if float(data['precip']) > 0: tweet += " ({}mm)".format(data['precip'])
         extra_info = ", {} hPa".format(data['pressure'])
         if len(tweet) + len(extra_info) < 70:
